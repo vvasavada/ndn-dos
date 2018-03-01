@@ -6,55 +6,55 @@ router
 rtr-az-1    NA  250   100
 rtr-az-math NA  300  50
 rtr-az-cs   NA  350 150
-az-math-attacker   NA  350 0
-az-cs-attacker NA  400 150
+az-math   NA  350 0
+az-cs NA  400 150
 rtr-ucla-1  NA  200 150
 rtr-ucla-2  NA  200 250
 rtr-ucla-cs NA  150    100
 rtr-ucla-math   NA  150    200
 ucla-cs-webserver0-index NA  150    0
 ucla-cs-alicelovecpp NA  100    50
-ucla-cs-attacker NA  100    150
-ucla-math-attacker   NA  100    250
+ucla-cs NA  100    150
+ucla-math   NA  100    250
 rtr-wc-1    NA  250   200
 rtr-wc-westwood NA  350 200
 rtr-wc-santa-monica NA  300  250
-wc-westwood-attacker   NA  400 250
-wc-santa-monica-attacker   NA  350 300
+wc-westwood   NA  400 250
+wc-santa-monica   NA  350 300
 rtr-mmphs-1 NA  200 300
 rtr-mmphs-ee    NA  200 400
 rtr-mmphs-computer  NA  150    350
-mmphs-ee-attacker NA  250   450
+mmphs-ee NA  250   450
 mmphs-computer-bob00  NA  100    350
 
 link
 
-#from	to	capacity
-rtr-az-1    rtr-ucla-1	10Mbps
-rtr-az-1    rtr-wc-1	10Mbps
-rtr-az-1    rtr-az-math	10Mbps
-rtr-az-1    rtr-az-cs	10Mbps
-rtr-az-math az-math-attacker	10Mbps
-rtr-az-math rtr-az-cs	10Mbps
-rtr-az-cs   az-cs-attacker	10Mbps
-rtr-ucla-1	rtr-wc-1	10Mbps
-rtr-ucla-1	rtr-ucla-2	10Mbps
-rtr-ucla-1	rtr-ucla-cs	10Mbps
-rtr-ucla-1	rtr-ucla-math	10Mbps
-rtr-ucla-2	rtr-mmphs-1	10Mbps
-rtr-ucla-2	rtr-ucla-math	10Mbps
-rtr-ucla-cs	rtr-ucla-math	10Mbps
-rtr-ucla-cs	ucla-cs-webserver0-index	10Mbps
-rtr-ucla-cs	ucla-cs-alicelovecpp	10Mbps
-rtr-ucla-cs	ucla-cs-attacker	10Mbps
-rtr-ucla-math	ucla-math-attacker	10Mbps
-rtr-wc-1	rtr-mmphs-1	10Mbps
-rtr-wc-1	rtr-wc-westwood	10Mbps
-rtr-wc-1	rtr-wc-santa-monica	10Mbps
-rtr-wc-westwood	wc-westwood-attacker	10Mbps
-rtr-wc-santa-monica	wc-santa-monica-attacker	10Mbps
-rtr-mmphs-1	rtr-mmphs-ee	10Mbps
-rtr-mmphs-1	rtr-mmphs-computer	10Mbps
-rtr-mmphs-ee	rtr-mmphs-computer	10Mbps
-rtr-mmphs-ee	mmphs-ee-attacker	10Mbps
-rtr-mmphs-computer	mmphs-computer-bob00	10Mbps
+#from   to  capacity    metric  delay   queue
+rtr-az-1    rtr-ucla-1  10Mbps  1   10ms    10
+rtr-az-1    rtr-wc-1    10Mbps  1   10ms    10
+rtr-az-1    rtr-az-math 10Mbps  1   10ms    10
+rtr-az-1    rtr-az-cs   10Mbps  1   10ms    10
+rtr-az-math az-math    10Mbps  1   10ms    10
+rtr-az-math rtr-az-cs   10Mbps  1   10ms    10
+rtr-az-cs   az-cs  10Mbps  1   10ms    10
+rtr-ucla-1  rtr-wc-1    10Mbps  1   10ms    10
+rtr-ucla-1  rtr-ucla-2  10Mbps  1   10ms    10
+rtr-ucla-1  rtr-ucla-cs 10Mbps  1   10ms    10
+rtr-ucla-1  rtr-ucla-math   10Mbps  1   10ms    10
+rtr-ucla-2  rtr-mmphs-1 10Mbps  1   10ms    10
+rtr-ucla-2  rtr-ucla-math   10Mbps  1   10ms    10
+rtr-ucla-cs rtr-ucla-math   10Mbps  1   10ms    10
+rtr-ucla-cs ucla-cs-webserver0-index    10Mbps  1   10ms    10
+rtr-ucla-cs ucla-cs-alicelovecpp    10Mbps  1   10ms    10
+rtr-ucla-cs ucla-cs    10Mbps  1   10ms    10
+rtr-ucla-math   ucla-math  10Mbps  1   10ms    10
+rtr-wc-1    rtr-mmphs-1 10Mbps  1   10ms    10
+rtr-wc-1    rtr-wc-westwood 10Mbps  1   10ms    10
+rtr-wc-1    rtr-wc-santa-monica 10Mbps  1   10ms    10
+rtr-wc-westwood wc-westwood    10Mbps  1   10ms    10
+rtr-wc-santa-monica wc-santa-monica    10Mbps  1   10ms    10
+rtr-mmphs-1 rtr-mmphs-ee    10Mbps  1   10ms    10
+rtr-mmphs-1 rtr-mmphs-computer  10Mbps  1   10ms    10
+rtr-mmphs-ee    rtr-mmphs-computer  10Mbps  1   10ms    10
+rtr-mmphs-ee    mmphs-ee   10Mbps  1   10ms    10
+rtr-mmphs-computer  mmphs-computer-bob00    10Mbps  1   10ms    10
