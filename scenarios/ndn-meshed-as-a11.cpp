@@ -1,5 +1,5 @@
 // ndn-meshed-as.cppp
-// A-11: Attacker localized in local network
+// A-11: Attackers localized in local AS
 
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
@@ -16,7 +16,6 @@ namespace ns3 {
 
         // Install NDN stack on all nodes
         ndn::StackHelper ndnHelper;
-        ndnHelper.SetDefaultRoutes(true);
         ndnHelper.InstallAll();
 
         // Installing global routing interface on all nodes
@@ -25,8 +24,14 @@ namespace ns3 {
 
         // Getting consumers
         Ptr<Node> ucla_cs_attacker = Names::Find<Node>("ucla-cs"); //localized attacker
+        Ptr<Node> ucla_math_attacker = Names::Find<Node>("ucla-math"); // localized attacker
 
-        Ptr<Node> ucla_math = Names::Find<Node>("ucla-math");
+        ndn::AppHelper consumerHelper("ConsApp");
+        consumerHelper.SetAttribute("Name", StringValue("/edu/ucla/cs/alicelovecpp/xyz"));
+        consumerHelper.SetAttribute("Frequency", StringValue("10"));
+        //consumerHelper.SetAttribute("AutoAppend", StringValue("false"));
+        consumerHelper.Install(ucla_cs_attacker);
+
         Ptr<Node> az_math = Names::Find<Node>("az-math");
         Ptr<Node> az_cs = Names::Find<Node>("az-cs");
         Ptr<Node> wc_westwood = Names::Find<Node>("wc-westwood");
@@ -39,20 +44,20 @@ namespace ns3 {
         Ptr<Node> ucla_cs_alicelovecpp = Names::Find<Node>("ucla-cs-alicelovecpp"); // target
 
 
-        // Manually configure UCLA AS routes
-        ndn::FibHelper::AddRoute("rtr-az-1", "/edu/ucla/cs/webserver0/index.html", "rtr-ucla-1", 1);
-        ndn::FibHelper::AddRoute("rtr-wc-1", "/edu/ucla/cs/webserver0/index.html", "rtr-ucla-1", 1);
-        ndn::FibHelper::AddRoute("rtr-mmphs-1", "/edu/ucla/cs/webserver0/index.html", "rtr-ucla-2", 1);
+        //ndn::AppHelper consumerHelper("ns3::ndn::Consumer");
+        //consumerHelper("Prefix", StringValue("/edu/ucla/cs/alicelovecpp"));
+        //consumerHelper.Install(ucla_cs_attacker);
+        //consumerHelper.Install(ucla_math_attacker);
 
-        ndn::FibHelper::AddRoute("rtr-ucla-1", "/edu/ucla/cs/webserver0/index.html", "rtr-ucla-cs", 1);
-        ndn::FibHelper::AddRoute("rtr-ucla-2", "/edu/ucla/cs/webserver0/index.html", "rtr-ucla-math", 1);
+        ndn::AppHelper producerHelper("ProdApp");
+        //producerHelper.SetAttribute("PayloadSize", StringValue("1024"));
 
-        ndn::FibHelper::AddRoute("rtr-ucla-math", "/edu/ucla/cs", "rtr-ucla-cs", 1);
-        ndn::FibHelper::AddRoute("ucla-math", "/edu/ucla/cs", "rtr-ucla-math", 1);
-        ndn::FibHelper::AddRoute("rtr-ucla-math", "/edu/ucla/cs", "rtr-ucla-cs", 1);
-        ndn::FibHelper::AddRoute("ucla-cs", "/edu/ucla/cs", "rtr-ucla-cs", 1);
-        ndn::FibHelper::AddRoute("rtr-ucla-cs", "/edu/ucla/cs/alicelovecpp", "ucla-cs-alicelovecpp", 1);
-        ndn::FibHelper::AddRoute("rtr-ucla-cs", "/edu/ucla/cs/webserver0/index.html", "ucla-cs-webserver0-index", 1);
+        ndnGlobalRoutingHelper.AddOrigins("/edu/ucla/cs/alicelovecpp", ucla_cs_alicelovecpp);
+        producerHelper.SetPrefix("/edu/ucla/cs/alicelovecpp");
+        producerHelper.Install(ucla_cs_alicelovecpp);
+
+        ndnGlobalRoutingHelper.CalculateRoutes();
+
 
         Simulator::Stop(Seconds(20.0));
 
