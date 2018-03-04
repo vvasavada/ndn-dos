@@ -1,7 +1,3 @@
-Currently implemented scenarios: ndn-binary-tree
-
-
-
 Run simulation through ns3 folder.
 
 To run the simulation, please follow the following steps:
