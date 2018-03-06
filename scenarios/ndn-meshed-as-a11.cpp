@@ -64,10 +64,6 @@ namespace ns3 {
         producerHelper.SetPrefix("/edu/ucla/cs/alicelovecpp");
         producerHelper.Install(ucla_cs_alicelovecpp);
 
-
-        Ptr<Node> rtr_az_1 = Names::Find<Node>("rtr-az-1");
-        ndnGlobalRoutingHelper.AddOrigins("/edu/arizona", rtr_az_1);
-
         Ptr<Node> rtr_ucla_1 = Names::Find<Node>("rtr-ucla-1");
         ndnGlobalRoutingHelper.AddOrigins("/edu/ucla", rtr_ucla_1);
 
