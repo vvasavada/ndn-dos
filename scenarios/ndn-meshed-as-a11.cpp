@@ -17,7 +17,6 @@ namespace ns3 {
         // Install NDN stack on all nodes
         ndn::StackHelper ndnHelper;
         //ndnHelper.setCsSize(200);
-        ndnHelper.SetDefaultRoutes(true);
         ndnHelper.InstallAll();
 
         // Installing global routing interface on all nodes
@@ -39,7 +38,7 @@ namespace ns3 {
 
 
         ndn::AppHelper consumerHelper("ConsApp");
-        //consumerHelper.SetAttribute("Name", StringValue("/edu/ucla/cs/alicelovecpp"));
+        //consumerHelper.SetAttribute("Name", StringValue("/edu/ucla/cs/alicebla"));
         //consumerHelper.SetAttribute("Frequency", StringValue("1"));
         //consumerHelper.SetAttribute("Randomize", StringValue("uniform"));
         //consumerHelper.Install(ucla_cs_attacker); // should be able to reach
@@ -57,19 +56,32 @@ namespace ns3 {
         Ptr<Node> ucla_cs_alicelovecpp = Names::Find<Node>("ucla-cs-alicelovecpp"); // target
 
         ndn::AppHelper producerHelper("ProdApp");
-
-        ndnGlobalRoutingHelper.AddOrigin("/edu/ucla/cs/webserver0/index.html", ucla_cs_webserver0_index);
+        
+        ndnGlobalRoutingHelper.AddOrigins("/edu/ucla/cs/webserver0/index.html", ucla_cs_webserver0_index);
         producerHelper.SetPrefix("/edu/ucla/cs/webserver0/index.html");
         producerHelper.Install(ucla_cs_webserver0_index);
-
-        ndnGlobalRoutingHelper.CalculateRoutes();
 
         producerHelper.SetPrefix("/edu/ucla/cs/alicelovecpp");
         producerHelper.Install(ucla_cs_alicelovecpp);
 
+
+        Ptr<Node> rtr_az_1 = Names::Find<Node>("rtr-az-1");
+        ndnGlobalRoutingHelper.AddOrigins("/edu/arizona", rtr_az_1);
+
+        Ptr<Node> rtr_ucla_1 = Names::Find<Node>("rtr-ucla-1");
+        ndnGlobalRoutingHelper.AddOrigins("/edu/ucla", rtr_ucla_1);
+
+        Ptr<Node> rtr_ucla_cs = Names::Find<Node>("rtr-ucla-cs");
+        ndnGlobalRoutingHelper.AddOrigins("/edu/ucla/cs", rtr_ucla_cs);
+
+        ndnGlobalRoutingHelper.CalculateRoutes();
+
+
         ndn::FibHelper::AddRoute("ucla-cs", "/edu/ucla/cs/alicelovecpp", "rtr-ucla-cs", 1);
         ndn::FibHelper::AddRoute("rtr-ucla-cs", "/edu/ucla/cs/alicelovecpp", "ucla-cs-alicelovecpp", 1);
- 
+
+
+
         Simulator::Stop(Seconds(20.0));
 
         L2RateTracer::InstallAll("a11.txt", Seconds(0.5));
