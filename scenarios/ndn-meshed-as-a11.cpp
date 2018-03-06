@@ -1,5 +1,5 @@
 // ndn-meshed-as.cppp
-// A-11: Attackers localized in local AS
+// A-11: Attackers localized in local network
 
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
@@ -16,6 +16,8 @@ namespace ns3 {
 
         // Install NDN stack on all nodes
         ndn::StackHelper ndnHelper;
+        //ndnHelper.setCsSize(200);
+        ndnHelper.SetDefaultRoutes(true);
         ndnHelper.InstallAll();
 
         // Installing global routing interface on all nodes
@@ -23,42 +25,51 @@ namespace ns3 {
         ndnGlobalRoutingHelper.InstallAll();
 
         // Getting consumers
-        Ptr<Node> ucla_cs_attacker = Names::Find<Node>("ucla-cs"); //localized attacker
-        Ptr<Node> ucla_math_attacker = Names::Find<Node>("ucla-math"); // localized attacker
+
+        // localized attackers
+        Ptr<Node> ucla_cs_attacker = Names::Find<Node>("ucla-cs");
+
+        // global attackers
+        Ptr<Node> ucla_math_attacker = Names::Find<Node>("ucla-math");
+        Ptr<Node> az_cs_attacker = Names::Find<Node>("az-cs");
+        Ptr<Node> az_math_attacker = Names::Find<Node>("az-math"); 
+        Ptr<Node> wc_westwood_attacker = Names::Find<Node>("wc-westwood");
+        Ptr<Node> wc_santa_monica_attacker = Names::Find<Node>("wc-santa-monica");
+        Ptr<Node> mmphs_ee_attacker = Names::Find<Node>("mmphs-ee");
+
 
         ndn::AppHelper consumerHelper("ConsApp");
-        consumerHelper.SetAttribute("Name", StringValue("/edu/ucla/cs/alicelovecpp/xyz"));
-        consumerHelper.SetAttribute("Frequency", StringValue("10"));
-        //consumerHelper.SetAttribute("AutoAppend", StringValue("false"));
-        consumerHelper.Install(ucla_cs_attacker);
+        //consumerHelper.SetAttribute("Name", StringValue("/edu/ucla/cs/alicelovecpp"));
+        //consumerHelper.SetAttribute("Frequency", StringValue("1"));
+        //consumerHelper.SetAttribute("Randomize", StringValue("uniform"));
+        //consumerHelper.Install(ucla_cs_attacker); // should be able to reach
+        //consumerHelper.Install(ucla_math_attacker); // should not be able to reach
+        //consumerHelper.Install(az_cs_attacker); // should not be able to reach
 
-        Ptr<Node> az_math = Names::Find<Node>("az-math");
-        Ptr<Node> az_cs = Names::Find<Node>("az-cs");
-        Ptr<Node> wc_westwood = Names::Find<Node>("wc-westwood");
-        Ptr<Node> wc_santa_monica = Names::Find<Node>("wc-santa-monica");
-        Ptr<Node> mmphs_ee = Names::Find<Node>("mmphs-ee");
+        //consumerHelper.SetAttribute("Name", StringValue("/edu/ucla/cs/webserver0/index.html"));
+        //consumerHelper.SetAttribute("Frequency", StringValue("1"));
+        //consumerHelper.Install(az_cs_attacker); // should be able to reach
+        //consumerHelper.Install(ucla_cs_attacker); // should be able to reach
 
         // Getting producers
         Ptr<Node> mmphs_computer_bob00 = Names::Find<Node>("mmphs-computer-bob00");
         Ptr<Node> ucla_cs_webserver0_index = Names::Find<Node>("ucla-cs-webserver0-index");
         Ptr<Node> ucla_cs_alicelovecpp = Names::Find<Node>("ucla-cs-alicelovecpp"); // target
 
-
-        //ndn::AppHelper consumerHelper("ns3::ndn::Consumer");
-        //consumerHelper("Prefix", StringValue("/edu/ucla/cs/alicelovecpp"));
-        //consumerHelper.Install(ucla_cs_attacker);
-        //consumerHelper.Install(ucla_math_attacker);
-
         ndn::AppHelper producerHelper("ProdApp");
-        //producerHelper.SetAttribute("PayloadSize", StringValue("1024"));
 
-        ndnGlobalRoutingHelper.AddOrigins("/edu/ucla/cs/alicelovecpp", ucla_cs_alicelovecpp);
-        producerHelper.SetPrefix("/edu/ucla/cs/alicelovecpp");
-        producerHelper.Install(ucla_cs_alicelovecpp);
+        ndnGlobalRoutingHelper.AddOrigin("/edu/ucla/cs/webserver0/index.html", ucla_cs_webserver0_index);
+        producerHelper.SetPrefix("/edu/ucla/cs/webserver0/index.html");
+        producerHelper.Install(ucla_cs_webserver0_index);
 
         ndnGlobalRoutingHelper.CalculateRoutes();
 
+        producerHelper.SetPrefix("/edu/ucla/cs/alicelovecpp");
+        producerHelper.Install(ucla_cs_alicelovecpp);
 
+        ndn::FibHelper::AddRoute("ucla-cs", "/edu/ucla/cs/alicelovecpp", "rtr-ucla-cs", 1);
+        ndn::FibHelper::AddRoute("rtr-ucla-cs", "/edu/ucla/cs/alicelovecpp", "ucla-cs-alicelovecpp", 1);
+ 
         Simulator::Stop(Seconds(20.0));
 
         L2RateTracer::InstallAll("a11.txt", Seconds(0.5));
@@ -73,4 +84,3 @@ namespace ns3 {
 int main(int argc, char* argv[]){
     return ns3::main(argc, argv);
 }
-
