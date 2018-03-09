@@ -59,6 +59,7 @@ ConsApp::ConsApp()
   , m_autoappend("true")
 {
   m_lastSeq = -1;
+  m_maxSeq = 200; // hard-coding for now
 }
 
 ConsApp::~ConsApp()
@@ -146,6 +147,12 @@ ConsApp::SendInterest()
   if (!m_autoappend.compare("true")){
     interest_copy += "/" + std::to_string(m_lastSeq + 1);
     m_lastSeq += 1;
+
+    if (m_lastSeq == m_maxSeq){
+      m_lastSeq = -1;
+    }
+  } else{
+    interest_copy += "/" + 'a' + rand()%26;
   }
   
 
