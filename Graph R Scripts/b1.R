@@ -21,7 +21,9 @@ data = subset(data, Type %in% c("InInterests"))
 # combine stats from all faces
 data.combined = summaryBy(. ~ Time + Node + Type, data=data, FUN=sum)
 
-data = subset(data.combined, Node %in% c("ucla-cs-webserver0-index"))
+data = subset(data.combined, Node %in% c("ucla-cs-webserver0-index", 
+											"rtr-ucla-cs", 
+											"rtr-ucla-1"))
 
 # graph rates on selected nodes in number of incoming interest packets
 g.nodes <- ggplot(data) +
